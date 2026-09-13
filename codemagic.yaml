@@ -1,24 +1,30 @@
 workflows:
   android-release:
     name: Android release
+
     environment:
       flutter: 3.47.4
+
     scripts:
-      - flutter pub get
-      - flutter analyze
-      - flutter test
-      - flutter build apk --release --dart-define=API_BASE_URL=$API_BASE_URL
+      - name: Get Flutter packages
+        script: |
+          cd mobile-app
+          flutter pub get
+
+      - name: Analyze
+        script: |
+          cd mobile-app
+          flutter analyze
+
+      - name: Test
+        script: |
+          cd mobile-app
+          flutter test
+
+      - name: Build APK
+        script: |
+          cd mobile-app
+          flutter build apk --release --dart-define=API_BASE_URL=$API_BASE_URL
+
     artifacts:
-      - build/app/outputs/flutter-apk/app-release.apk
-  ios-release:
-    name: iOS release
-    environment:
-      flutter: 3.47.4
-      xcode: latest
-    scripts:
-      - flutter pub get
-      - flutter analyze
-      - flutter test
-      - flutter build ios --release --no-codesign --dart-define=API_BASE_URL=$API_BASE_URL
-    artifacts:
-      - build/ios/iphoneos/Runner.app
+      - mobile-app/build/app/outputs/flutter-apk/app-release.apk
