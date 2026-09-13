@@ -14,6 +14,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    restart: unless-stopped
 
   backend:
     build:
@@ -25,6 +26,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1:8000/api/v1/health') === false ? 1 : 0);"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - ./backend:/var/www/html
 
@@ -33,12 +40,18 @@ services:
       context: ./admin-dashboard
       dockerfile: Dockerfile
     environment:
-      VITE_API_BASE_URL: ${API_BASE_URL:-http://localhost:8000/api/v1}
+      VITE_API_BASE_URL: ${API_BASE_URL:?Set API_BASE_URL in .env}
     ports:
       - "${ADMIN_PORT:-5173}:5173"
     volumes:
       - ./admin-dashboard:/app
       - /app/node_modules
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:5173"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
