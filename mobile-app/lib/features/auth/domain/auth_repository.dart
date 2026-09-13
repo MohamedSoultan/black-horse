@@ -1,0 +1,2 @@
+import 'entities/auth_session.dart';
+abstract interface class AuthRepository { Future<AuthSession> login(String phone,String password); Future<Map<String,dynamic>> register({required String name,required String phone,String? email,required String password}); Future<AuthSession> verify(String phone,String otp); Future<void> logout(); Future<void> forgotPassword(String phone); Future<void> resetPassword(String phone,String otp,String password); }

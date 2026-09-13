@@ -1,0 +1,1 @@
+class AuthUser { const AuthUser({required this.id,required this.name,required this.phone,this.email,this.status}); final String id,name,phone; final String? email,status; factory AuthUser.fromJson(Map<String,dynamic> j)=>AuthUser(id:'${j['id']}',name:j['name']??'',phone:j['phone']??'',email:j['email'],status:j['status']); }

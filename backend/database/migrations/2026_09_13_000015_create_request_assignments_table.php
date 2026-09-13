@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration;use Illuminate\Database\Schema\Blueprint;use Illuminate\Support\Facades\Schema;
+return new class extends Migration{public function up():void{Schema::create('request_assignments',function(Blueprint $t){$t->id();$t->uuid('request_id');$t->uuid('admin_id');$t->timestamp('assigned_at');$t->string('status')->default('ASSIGNED');$t->text('notes')->nullable();$t->timestamps();$t->foreign('request_id')->references('id')->on('requests')->cascadeOnDelete();$t->foreign('admin_id')->references('id')->on('users');$t->index(['request_id','status']);});}public function down():void{Schema::dropIfExists('request_assignments');}};

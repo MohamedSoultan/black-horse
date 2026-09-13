@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration;use Illuminate\Database\Schema\Blueprint;use Illuminate\Support\Facades\Schema;
+return new class extends Migration{public function up():void{Schema::create('portfolio_items',function(Blueprint $t){$t->uuid('id')->primary();$t->foreignId('category_id')->constrained('portfolio_categories');$t->string('title');$t->string('short_description');$t->text('description');$t->text('cover_image')->nullable();$t->string('status')->default('ACTIVE');$t->uuid('created_by');$t->timestamps();$t->softDeletes();$t->foreign('created_by')->references('id')->on('users');$t->index(['status','category_id']);});}public function down():void{Schema::dropIfExists('portfolio_items');}};

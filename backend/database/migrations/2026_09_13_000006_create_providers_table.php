@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration; use Illuminate\Database\Schema\Blueprint; use Illuminate\Support\Facades\Schema;
+return new class extends Migration { public function up(): void { Schema::create('providers', function(Blueprint $t){$t->uuid('id')->primary();$t->uuid('user_id')->unique();$t->foreignId('category_id')->constrained('provider_categories');$t->text('bio');$t->unsignedInteger('experience_years')->nullable();$t->string('location');$t->string('verification_status')->default('VERIFIED');$t->timestamp('approved_at');$t->timestamps();$t->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();$t->index(['verification_status','category_id']);}); } public function down(): void {Schema::dropIfExists('providers');} };

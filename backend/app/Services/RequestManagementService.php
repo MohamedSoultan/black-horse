@@ -1,0 +1,3 @@
+<?php
+namespace App\Services;use App\Models\{Request,RequestAssignment,User};use Illuminate\Support\Str;
+class RequestManagementService{public function create(array $d,?User $u):Request{return Request::create($d+['id'=>(string)Str::uuid(),'user_id'=>$u?->id]);}public function assign(Request $r,User $admin,array $d):RequestAssignment{$r->assignments()->where('status','ASSIGNED')->update(['status'=>'UNASSIGNED']);return $r->assignments()->create(['admin_id'=>$d['admin_id'],'assigned_at'=>now(),'status'=>'ASSIGNED','notes'=>$d['notes']??null]);}public function status(Request $r,string $status):Request{$r->update(['status'=>$status]);return $r->fresh();}}

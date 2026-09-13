@@ -1,0 +1,2 @@
+import {NavLink,Outlet} from 'react-router-dom';import {useAuth} from '../store/auth';
+export function Layout(){const {logout,can}=useAuth();return <div className="shell"><aside><h2>BLACK HORSE</h2><nav>{[['/','Dashboard'],['/users','Users'],['/providers','Providers'],['/services','Services'],['/portfolio','Portfolio'],['/requests','Requests'],['/notifications','Notifications']].map(([p,l])=><NavLink key={p} to={p}>{l}</NavLink>)}{can('SUPER_ADMIN')&&<NavLink to="/roles">Roles</NavLink>}</nav><button onClick={logout}>Logout</button></aside><main><Outlet/></main></div>}

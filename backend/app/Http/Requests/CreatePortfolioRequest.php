@@ -1,0 +1,2 @@
+<?php
+namespace App\Http\Requests;use Illuminate\Foundation\Http\FormRequest;class CreatePortfolioRequest extends FormRequest{public function authorize():bool{return true;}public function rules():array{return ['category_id'=>'required|exists:portfolio_categories,id','title'=>'required|string|max:255','short_description'=>'required|string|max:500','description'=>'required|string','cover_image'=>'nullable|url','status'=>'nullable|in:ACTIVE,INACTIVE'];}}

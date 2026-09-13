@@ -1,0 +1,3 @@
+<?php
+namespace App\Http\Controllers\Api\V1;use App\Http\Requests\MarkNotificationReadRequest;use App\Models\Notification;use App\Services\NotificationService;use Illuminate\Http\Request;
+class NotificationController extends ApiController{public function __construct(private NotificationService $service){}public function index(Request $r){return $this->success(Notification::where('user_id',$r->user()->id)->latest()->paginate(20));}public function unreadCount(Request $r){return $this->success(['count'=>$this->service->unreadCount($r->user())]);}public function read(MarkNotificationReadRequest $r,Notification $notification){abort_unless($notification->user_id===$r->user()->id,404);return $this->success($this->service->markRead($notification));}}

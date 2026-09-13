@@ -1,0 +1,2 @@
+import 'package:flutter_test/flutter_test.dart';import 'package:black_horse/features/requests/domain/entities/request_entity.dart';
+void main(){test('request model parses API payload',(){final r=RequestEntity.fromJson({'id':'1','name':'A','phone':'1','message':'Help','status':'NEW'});expect(r.id,'1');expect(r.status,'NEW');});test('request validation requirements are represented',(){expect(()=>RequestEntity.fromJson({'id':'1','name':'','phone':'','message':'','status':'NEW'}),returnsNormally);});}

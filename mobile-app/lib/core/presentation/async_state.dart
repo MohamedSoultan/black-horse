@@ -1,0 +1,1 @@
+sealed class AsyncState<T>{const AsyncState();}class AsyncInitial<T> extends AsyncState<T>{const AsyncInitial();}class AsyncLoading<T> extends AsyncState<T>{const AsyncLoading();}class AsyncData<T> extends AsyncState<T>{const AsyncData(this.value);final T value;}class AsyncError<T> extends AsyncState<T>{const AsyncError(this.message);final String message;}

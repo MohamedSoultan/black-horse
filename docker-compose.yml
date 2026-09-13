@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-black_horse}
+      POSTGRES_USER: ${POSTGRES_USER:-black_horse}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-black_horse} -d ${POSTGRES_DB:-black_horse}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file: .env
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/var/www/html
+
+  admin-dashboard:
+    build:
+      context: ./admin-dashboard
+      dockerfile: Dockerfile
+    environment:
+      VITE_API_BASE_URL: ${API_BASE_URL:-http://localhost:8000/api/v1}
+    ports:
+      - "${ADMIN_PORT:-5173}:5173"
+    volumes:
+      - ./admin-dashboard:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:

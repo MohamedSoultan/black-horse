@@ -1,0 +1,24 @@
+workflows:
+  android-release:
+    name: Android release
+    environment:
+      flutter: 3.47.4
+    scripts:
+      - flutter pub get
+      - flutter analyze
+      - flutter test
+      - flutter build apk --release --dart-define=API_BASE_URL=$API_BASE_URL
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+  ios-release:
+    name: iOS release
+    environment:
+      flutter: 3.47.4
+      xcode: latest
+    scripts:
+      - flutter pub get
+      - flutter analyze
+      - flutter test
+      - flutter build ios --release --no-codesign --dart-define=API_BASE_URL=$API_BASE_URL
+    artifacts:
+      - build/ios/iphoneos/Runner.app

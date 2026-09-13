@@ -1,0 +1,24 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\{ProviderCategoryController,ProviderApplicationController,ProviderController};
+use App\Http\Controllers\Api\V1\{ServiceCategoryController,ServiceController};
+use App\Http\Controllers\Api\V1\{PortfolioCategoryController,PortfolioController};
+use App\Http\Controllers\Api\V1\AdminOverviewController;
+
+Route::get('/health', fn () => response()->json([
+    'data' => ['status' => 'ok', 'service' => 'black-horse-api'],
+    'meta' => ['timestamp' => now()->toIso8601String()],
+]));
+Route::prefix('auth')->group(function(){Route::post('/register',[AuthController::class,'register']);Route::post('/verify',[AuthController::class,'verify']);Route::post('/login',[AuthController::class,'login']);Route::post('/refresh',[AuthController::class,'refresh']);Route::post('/password/forgot',[AuthController::class,'forgot']);Route::post('/password/reset',[AuthController::class,'reset']);Route::middleware('auth:api')->post('/logout',[AuthController::class,'logout']);});
+Route::middleware('auth:api')->get('/me', fn(Request $r)=>response()->json(['data'=>$r->user()]));
+Route::get('/providers/categories',[ProviderCategoryController::class,'index']); Route::get('/providers',[ProviderController::class,'index']); Route::get('/providers/{provider}',[ProviderController::class,'show']);
+Route::middleware('auth:api')->group(function(){Route::post('/provider-applications',[ProviderApplicationController::class,'store']);Route::get('/my/provider-application',[ProviderApplicationController::class,'mine']);Route::get('/provider/profile',[ProviderController::class,'profile']);Route::put('/provider/profile',[ProviderController::class,'update']);});
+Route::middleware('auth:api')->prefix('admin/provider-applications')->group(function(){Route::get('/',[ProviderApplicationController::class,'index']);Route::get('/{application}',[ProviderApplicationController::class,'show']);Route::post('/{application}/approve',[ProviderApplicationController::class,'approve']);Route::post('/{application}/reject',[ProviderApplicationController::class,'reject']);});
+Route::get('/services/categories',[ServiceCategoryController::class,'index']);Route::get('/services',[ServiceController::class,'index']);Route::get('/services/{service}',[ServiceController::class,'show']);Route::middleware('auth:api')->prefix('admin/services')->group(function(){Route::post('/categories',[ServiceCategoryController::class,'store']);Route::put('/categories/{category}',[ServiceCategoryController::class,'update']);Route::post('/',[ServiceController::class,'store']);Route::put('/{service}',[ServiceController::class,'update']);Route::delete('/{service}',[ServiceController::class,'destroy']);});
+Route::get('/portfolio/categories',[PortfolioCategoryController::class,'index']);Route::get('/portfolio',[PortfolioController::class,'index']);Route::get('/portfolio/{portfolio}',[PortfolioController::class,'show']);Route::middleware('auth:api')->prefix('admin/portfolio')->group(function(){Route::post('/categories',[PortfolioCategoryController::class,'store']);Route::put('/categories/{category}',[PortfolioCategoryController::class,'update']);Route::post('/',[PortfolioController::class,'store']);Route::put('/{portfolio}',[PortfolioController::class,'update']);Route::delete('/{portfolio}',[PortfolioController::class,'destroy']);});
+Route::post('/requests',[\App\Http\Controllers\Api\V1\RequestController::class,'store']);Route::middleware('auth:api')->group(function(){Route::get('/my/requests',[\App\Http\Controllers\Api\V1\RequestController::class,'mine']);Route::get('/my/requests/{lead}',[\App\Http\Controllers\Api\V1\RequestController::class,'showMine']);});Route::middleware('auth:api')->prefix('admin/requests')->group(function(){Route::get('/',[\App\Http\Controllers\Api\V1\AdminRequestController::class,'index']);Route::get('/{lead}',[\App\Http\Controllers\Api\V1\AdminRequestController::class,'show']);Route::put('/{lead}/status',[\App\Http\Controllers\Api\V1\AdminRequestController::class,'status']);Route::post('/{lead}/assign',[\App\Http\Controllers\Api\V1\AdminRequestController::class,'assign']);});
+Route::middleware('auth:api')->group(function(){Route::get('/notifications',[\App\Http\Controllers\Api\V1\NotificationController::class,'index']);Route::get('/notifications/unread-count',[\App\Http\Controllers\Api\V1\NotificationController::class,'unreadCount']);Route::put('/notifications/{notification}/read',[\App\Http\Controllers\Api\V1\NotificationController::class,'read']);});
+Route::middleware('auth:api')->prefix('admin')->group(function(){Route::get('/dashboard',[AdminOverviewController::class,'dashboard']);Route::get('/users',[AdminOverviewController::class,'users']);Route::get('/providers',[AdminOverviewController::class,'providers']);});

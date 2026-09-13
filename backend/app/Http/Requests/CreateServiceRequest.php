@@ -1,0 +1,2 @@
+<?php
+namespace App\Http\Requests;use Illuminate\Foundation\Http\FormRequest;class CreateServiceRequest extends FormRequest{public function authorize():bool{return true;}public function rules():array{return ['category_id'=>'required|exists:service_categories,id','title'=>'required|string|max:255','short_description'=>'required|string|max:500','description'=>'required|string','image_url'=>'nullable|url','status'=>'nullable|in:ACTIVE,INACTIVE'];}}

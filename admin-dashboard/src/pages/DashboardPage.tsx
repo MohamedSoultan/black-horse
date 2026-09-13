@@ -1,0 +1,2 @@
+import {useEffect,useState} from 'react';import {api} from '../services/api';
+export function DashboardPage(){const [d,setD]=useState<any>(null),[error,setError]=useState('');useEffect(()=>{api<any>('/admin/dashboard').then(r=>setD(r.data)).catch(e=>setError(e.message))},[]);const cards=['users','providers','pending_applications','services','requests'];return <section><h1>Dashboard</h1>{error&&<p role="alert">{error}</p>}<div className="cards">{cards.map(k=><article key={k}><span>{k.replaceAll('_',' ')}</span><strong>{d?.[k]??'—'}</strong></article>)}</div></section>}

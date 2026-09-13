@@ -1,0 +1,2 @@
+import 'package:dio/dio.dart';
+class AuthInterceptor extends Interceptor { @override void onRequest(RequestOptions options,RequestInterceptorHandler handler){/* Token attachment is implemented with auth in a later phase. */handler.next(options);} @override void onError(DioException err,ErrorInterceptorHandler handler){/* Refresh orchestration is intentionally a placeholder. */handler.next(err);} }

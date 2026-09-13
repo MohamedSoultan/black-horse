@@ -1,0 +1,1 @@
+import 'entities/request_entity.dart';abstract interface class RequestRepository{Future<RequestEntity>create(Map<String,dynamic> data);Future<List<RequestEntity>>mine();Future<RequestEntity>detail(String id);}

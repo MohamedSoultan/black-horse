@@ -1,0 +1,3 @@
+<?php
+namespace App\Models; use Illuminate\Database\Eloquent\Model; use Illuminate\Database\Eloquent\Factories\HasFactory; use Illuminate\Support\Str;
+class Provider extends Model { use HasFactory; public $incrementing=false; protected $keyType='string'; protected $fillable=['user_id','category_id','bio','experience_years','location','verification_status','approved_at']; protected static function booted(){static::creating(fn($m)=>$m->id??=(string)Str::uuid());} public function user(){return $this->belongsTo(User::class);} public function category(){return $this->belongsTo(ProviderCategory::class,'category_id');} public function media(){return $this->hasMany(ProviderMedia::class);} }
